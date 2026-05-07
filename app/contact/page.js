@@ -1,6 +1,7 @@
 // app/about/page.jsx
-import ContactPage from "@/components/ContactPage";
+
+import AboutPage from "@/components/AboutPage";
 
 export default function Page() {
-  return <ContactPage />;
+  return <AboutPage />;
 }
