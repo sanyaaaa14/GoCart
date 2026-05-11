@@ -1,4 +1,4 @@
-# 🛒 GoCart - E-Commerce Platform
+# 🛒 GoCart - E-Commerce Platform 
 
 **GoCart** is a modern, full-stack, multi-vendor e-commerce platform built with Next.js. It empowers both buyers and sellers by offering a seamless shopping experience, robust store management, secure payments, and a scalable architecture.
 
