@@ -14,7 +14,10 @@ export async function GET(request) {
                     user:{ select:{name:true , image:true}}
                 }
             },
-            store:true
+            store:true,
+            _count: {
+                select: { orderItems: true }
+            }
         },
         orderBy:{createdAt:'desc'}
     })

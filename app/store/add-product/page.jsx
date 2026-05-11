@@ -82,6 +82,7 @@ export default function StoreAddProduct() {
             return toast.error('Please Upload atleast one image')
         }
 
+        const toastId = toast.loading("Adding Product...", { position: "top-center" })
         setLoading(true)
 
         const formData = new FormData();
@@ -101,7 +102,7 @@ export default function StoreAddProduct() {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
-      toast.success(data.message)
+      toast.success("New product added!", { id: toastId, position: "top-center" })
       
       setProductInfo({
         name: "",
@@ -114,7 +115,7 @@ export default function StoreAddProduct() {
     setImages({ 1: null, 2: null, 3: null, 4: null })
 
     } catch (err) {
-      toast.error(err?.response?.data?.error || err.message);
+      toast.error(err?.response?.data?.error || err.message, { id: toastId, position: "top-center" });
     }finally{
     setLoading(false);
     }
@@ -122,7 +123,7 @@ export default function StoreAddProduct() {
 
 
     return (
-        <form onSubmit={e => toast.promise(onSubmitHandler(e), { loading: "Adding Product..." })} className="text-slate-500 mb-28">
+        <form onSubmit={onSubmitHandler} className="text-slate-500 mb-28">
             <h1 className="text-2xl">Add New <span className="text-slate-800 font-medium">Products</span></h1>
             <p className="mt-7">Product Images</p>
 

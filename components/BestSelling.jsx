@@ -10,7 +10,7 @@ import { motion } from 'framer-motion'
 gsap.registerPlugin(ScrollTrigger)
 
 const BestSelling = () => {
-  const displayQuantity = 8
+  const displayQuantity = 4
   const products = useSelector((state) => state.product.list)
 
   const sectionRef = useRef(null)
@@ -71,7 +71,7 @@ const BestSelling = () => {
       <div className='mt-12 grid grid-cols-2 sm:flex flex-wrap gap-6 xl:gap-12'>
         {products
           .slice()
-          .sort((a, b) => b.rating.length - a.rating.length)
+          .sort((a, b) => (b._count?.orderItems || 0) - (a._count?.orderItems || 0))
           .slice(0, displayQuantity)
           .map((product, index) => (
             <div
