@@ -1,6 +1,6 @@
 import { metadata } from "@/app/layout";
 import prisma from "@/lib/prisma";
-import { getAuth } from "@clerk/nextjs/server";
+import { getAuth, currentUser } from "@clerk/nextjs/server";
 import { PaymentMethod } from "@prisma/client";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -9,9 +9,23 @@ import Stripe from "stripe";
 export async function POST(request) {
   try {
     const { userId , has } = getAuth(request);
+    const user = await currentUser();
 
-    if (!userId) {
+    if (!userId || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const dbUser = await prisma.user.findUnique({ where: { id: userId } });
+    if (!dbUser) {
+      await prisma.user.create({
+        data: {
+          id: userId,
+          email: user.emailAddresses?.[0]?.emailAddress || "",
+          name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "User",
+          image: user.imageUrl || "",
+          cart: {},
+        },
+      });
     }
 
     const {addressId , items ,couponCode ,paymentMethod   } = await request.json()

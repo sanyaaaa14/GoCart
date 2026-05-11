@@ -1,14 +1,27 @@
 import prisma from "@/lib/prisma";
-import { getAuth } from "@clerk/nextjs/server";
+import { getAuth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 
 export async function POST(request) {
   try {
     const { userId } = getAuth(request);
+    const user = await currentUser();
 
-    if (!userId) {
+    if (!userId || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const dbUser = await prisma.user.findUnique({ where: { id: userId } });
+    if (!dbUser) {
+      await prisma.user.create({
+        data: {
+          id: userId,
+          email: user.emailAddresses?.[0]?.emailAddress || "",
+          name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "User",
+          image: user.imageUrl || "",
+        },
+      });
     }
 
     const {address} = await request.json()
